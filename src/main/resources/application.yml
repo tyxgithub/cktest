@@ -1,0 +1,9 @@
+server:
+  servlet:
+    context-path: /cktest
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/tyxtest
+    username: root
+    password: root
