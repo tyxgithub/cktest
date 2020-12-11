@@ -8,6 +8,11 @@ import com.tyx.cktest.pojo.User;
 import com.tyx.cktest.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.UnknownAccountException;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,9 +38,8 @@ public class UserController {
     //注册
     @PostMapping("/register")
     @ApiOperation(value = "注册方法",httpMethod = "POST")
-    public Result register(User user){
+    public Result register(@RequestBody User user){
         //调用业务层方法，插入到数据库中，save返回值 true, false就处理异常
-        user.setRegtime(new Date());
         Result result=null;
         UserMapper userMapper=(UserMapper) userServiceImpl.getBaseMapper();
         int insert = userMapper.insert(user);
@@ -59,6 +63,25 @@ public class UserController {
             result=new Result("1","账号不存在");
         }else{
             result=new Result("0","账号已存在");
+        }
+        return result;
+    }
+    @PostMapping("/login")
+    @ApiOperation(value = "登录方法",httpMethod = "POST")
+    public Result login(@RequestBody User user){
+        Result result=null;
+        try {
+            UsernamePasswordToken token=new UsernamePasswordToken(user.getUsername(),user.getPassword());
+            Subject subject = SecurityUtils.getSubject();
+            subject.login(token);
+            result=new Result("1","登录成功");
+        }catch (AuthenticationException e){
+            if(e instanceof UnknownAccountException){
+                result=new Result("0","用户名错误");
+            }else{
+                result=new Result("0","密码错误");
+            }
+            e.printStackTrace();
         }
         return result;
     }
