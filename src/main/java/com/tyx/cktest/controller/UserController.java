@@ -3,12 +3,15 @@ package com.tyx.cktest.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.tyx.cktest.common.Result;
+import com.tyx.cktest.mapper.UserMapper;
 import com.tyx.cktest.pojo.User;
 import com.tyx.cktest.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Date;
 
 /**
  * <p>
@@ -32,10 +35,15 @@ public class UserController {
     @ApiOperation(value = "注册方法",httpMethod = "POST")
     public Result register(User user){
         //调用业务层方法，插入到数据库中，save返回值 true, false就处理异常
-        Boolean b=userServiceImpl.save(user);
-        Result result=new Result("1","注册成功");
-        if(b){
-            System.out.println(String.format("用户: %s 注册成功",user.getUsername()));
+        user.setRegtime(new Date());
+        Result result=null;
+        UserMapper userMapper=(UserMapper) userServiceImpl.getBaseMapper();
+        int insert = userMapper.insert(user);
+        System.out.println("insert:"+insert);
+        if(insert==1){
+            result=new Result("1","注册成功");
+        }else{
+            result=new Result("0","注册失败");
         }
         return result;
     }
