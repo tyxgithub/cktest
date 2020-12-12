@@ -1,13 +1,14 @@
 package com.tyx.cktest.shiro;
 
+import java.io.Serializable;
+
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.web.servlet.ShiroHttpServletRequest;
 import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.apache.shiro.web.util.WebUtils;
-
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import java.io.Serializable;
 
 public class CustomSessionManager extends DefaultWebSessionManager {
 

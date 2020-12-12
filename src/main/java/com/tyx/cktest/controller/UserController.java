@@ -29,7 +29,7 @@ import java.util.Date;
 @RestController
 @RequestMapping("/user")
 @Api("用户模块")
-@CrossOrigin
+//@CrossOrigin
 public class UserController {
     @Autowired
     private UserService userServiceImpl;
@@ -98,6 +98,14 @@ public class UserController {
         Result result = null;
         //从shiro退出
         SecurityUtils.getSubject().logout();
+        result = new Result("1", "账号未登陆");
+        return result;
+    }
+
+    @GetMapping("/unauth")
+    @ApiOperation(value = "未授权方法", httpMethod = "GET")
+    public Result unauth() {
+        Result result = null;
         result = new Result("1", "账号未登陆");
         return result;
     }
