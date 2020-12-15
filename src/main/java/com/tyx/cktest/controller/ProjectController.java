@@ -47,4 +47,23 @@ public class ProjectController {
         result=new Result("1","项目添加成功");
         return result;
     }
+    @GetMapping("/{projectId}")
+    public Result getById(@PathVariable("projectId") Integer projectId){
+        Result result=null;
+        Project project = projectService.getById(projectId);
+        result=new Result("1",project,"查询项目");
+        return result;
+    }
+    @PutMapping("/{projectId}")
+    public Result updateById(@PathVariable("projectId") Integer projectId ,Project project){
+        Result result=null;
+        project.setId(projectId);
+
+        User user=(User) SecurityUtils.getSubject().getPrincipal();
+        project.setCreateUser(user.getId());
+
+        projectService.updateById(project);
+        result=new Result("1",project,"更新项目");
+        return result;
+    }
 }
